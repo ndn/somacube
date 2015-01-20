@@ -106,7 +106,10 @@ function center(shape) {
         z = Math.max(shape[i][1] + 1, z);
         y = Math.max(shape[i][2] + 1, y);
     }
-    return [ (x / 2.0) * BLOCKSIZE,
-             (z / 2.0) * BLOCKSIZE,
-             (y / 2.0) * BLOCKSIZE]
+
+    x = (x / 2.0) * BLOCKSIZE - (BLOCKSIZE / 2.0);
+    z = (z / 2.0) * BLOCKSIZE - (BLOCKSIZE / 2.0);
+    y = (y / 2.0) * BLOCKSIZE - (BLOCKSIZE / 2.0);
+
+    return [ x, z, y ];
 }
