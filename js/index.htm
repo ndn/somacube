@@ -36,26 +36,40 @@
                 float: left;
             }
 
-            .scene_small:hover {
+            .scene_small:hover, #previousButton:hover, #nextButton:hover {
                 outline: 1px solid #eeeeee;
                 background: #ffffff;
             }
 
-            #partBrowser {
+            #navigation {
                 padding: 5px;
-                margin-left: 175px;
                 float: left;
             }
 
-            .buttonPart {
+            .navButton, .partButton {
                 width: 30px;
                 height: 30px;
                 margin-right: 10px;
                 float: left;
             }
 
-            .invisibility {
+            #previousButton {
+                background: #eeeeee;
+                margin-right: 145px;
+            }
+
+            #nextButton {
+                margin-right: 0px;
+                margin-left: 135px;
+                background: #eeeeee;
+            }
+
+            .disappear {
                 display: none;
+                visibility: hidden;
+            }
+
+            .invisible {
                 visibility: hidden;
             }
         </style>
@@ -69,7 +83,7 @@
     <body>
         <h1>soma cube</h1>
         <div id="content">
-            <div id="partBrowser"/>
+            <div id="navigation"/>
         </div>
     </body>
 </html>

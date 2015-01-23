@@ -1,6 +1,6 @@
 
 var scenes = [];
-var current_scene = -1;
+var currentScene = -1;
 var page = 0;
 
 // TODO: Use same array as scene.js.
@@ -11,89 +11,72 @@ var transparency_mask = [ false, false, false, false, false, false, false ];
 $(function () {
 
     for (var i = 0; i < 9; i++) {
-        $("#partBrowser").before("<div class='scene_small' id='t" + i + "' />");
+        $("#navigation").before("<div class='scene scene_small' id='t" + i + "' />");
         var scene = new Scene($("#t" + i))
         scene.draw_problem(i);
         scene.render();
         scenes.push(scene);
     }
 
-    $(".scene_small").click(showBigScene);
-    $(".scene_small").mouseover(hoverSceneBegin);
-    $(".scene_small").mouseout(hoverSceneEnd);
-
+    $("#navigation").append("<div class='navButton' id='previousButton' />");
     for (var i = 0; i < 7; i++) {
-        $("#partBrowser").append("<div class='buttonPart' id='p" + i + "' style='background: " + sad_colours[i] + "' />");
-        var div = $("#p" + i);
-        div.click(togglePart);
-        div.mouseover(hoverPartBegin);
-        div.mouseout(hoverPartEnd);
+        $("#navigation").append("<div class='partButton invisible' id='p" + i + "' style='background: " + sad_colours[i] + "' />");
     }
+    $("#navigation").append("<div class='navButton' id='nextButton' />");
+
+    $(".scene")
+        .click(clickScene)
+        .mouseover(hoverSceneBegin)
+        .mouseout(hoverSceneEnd);
+
+    $(".partButton")
+        .click(togglePart)
+        .mouseover(hoverPartBegin)
+        .mouseout(hoverPartEnd);
+
+    $("#previousButton").click(previous);
+    $("#nextButton").click(next);
 
     document.addEventListener('keyup', onKeyUp, false);
 });
 
-function nextPage() {
-    page += 1;
-    if (page * 9 < problems.length) {
-        for (var i = 0; i < 9; i++) {
-            scenes[i].draw_problem(page * 9 + i);
-        }
-    }
-}
-
-function previousPage() {
-    if (page > 0) {
-        page -= 1;
-        for (var i = 0; i < 9; i++) {
-            scenes[i].draw_problem(page * 9 + i);
-        }
-    }
-}
-
-function showBigScene() {
+function clickScene() {
     resetMasks();
 
-    for (var i = 0; i < 9; i++) {
-        var div = $("#t" + i);
-        div.removeClass("scene_small");
-        if ($(this).attr('id') == div.attr('id')) {
-            div.addClass("scene_big");
-            scenes[i].draw_solution(page * 9 + i, part_mask, transparency_mask);
-            scenes[i].startAnimation();
-            scenes[i].resize(div.width(), div.height());
-            current_scene = i;
-        } else {
-            div.addClass("invisibility");
-        }
+    var i = getIndexFromId(this);
+    var div = $("#t" + i);
+
+    console.log("bla");
+    if (currentScene < 0) {
+        $(".scene").removeClass("scene_small");
+        $(".scene").addClass("disappear");
+
+        div.removeClass("disappear");
+        div.addClass("scene_big");
+
+        scenes[i].draw_solution(page * 9 + i, part_mask, transparency_mask);
+        scenes[i].startAnimation();
+        scenes[i].resize(div.width(), div.height());
+        currentScene = i;
+
+        $(".partButton").removeClass("invisible");
+    } else {
+        $(".scene").removeClass("disappear");
+        $(".scene").removeClass("scene_big");
+        $(".scene").addClass("scene_small");
+
+        scenes[i].draw_problem(page * 9 + i);
+        scenes[i].stopAnimation();
+        scenes[i].resize(div.width(), div.height());
+
+        $(".partButton").addClass("invisible");
+
+        currentScene = -1;
     }
-
-    $(".scene_big").click(showSmallScenes);
-}
-
-function showSmallScenes() {
-    resetMasks();
-
-    for (var i = 0; i < 9; i++) {
-        var div = $("#t" + i);
-        div.removeClass("invisibility");
-        div.removeClass("scene_big");
-        div.addClass("scene_small");
-        if ($(this).attr('id') == div.attr('id')) {
-            scenes[i].draw_problem(page * 9 + i);
-            scenes[i].stopAnimation();
-            scenes[i].resize(div.width(), div.height());
-        }
-    }
-    current_scene = -1;
-
-    $(".scene_small").click(showBigScene);
-    $(".scene_small").mouseover(hoverSceneBegin);
-    $(".scene_small").mouseout(hoverSceneEnd);
 }
 
 function hoverSceneBegin() {
-    if (current_scene >= 0)
+    if (currentScene >= 0)
         return;
 
     var i = getIndexFromId(this);
@@ -101,7 +84,7 @@ function hoverSceneBegin() {
 }
 
 function hoverSceneEnd() {
-    if (current_scene >= 0)
+    if (currentScene >= 0)
         return;
 
     var i = getIndexFromId(this);
@@ -109,7 +92,7 @@ function hoverSceneEnd() {
 }
 
 function togglePart() {
-    if (current_scene < 0)
+    if (currentScene < 0)
         return;
 
     var i = getIndexFromId(this);
@@ -122,25 +105,25 @@ function togglePart() {
         // TODO: Set opacity
     }
 
-    scenes[current_scene].draw_solution(page * 9 + current_scene, part_mask, transparency_mask);
+    scenes[currentScene].draw_solution(page * 9 + currentScene, part_mask, transparency_mask);
 }
 
 function hoverPartBegin() {
-    if (current_scene < 0)
+    if (currentScene < 0)
         return;
 
     var i = getIndexFromId(this);
     transparency_mask[i] = true;
-    scenes[current_scene].draw_solution(page * 9 + current_scene, part_mask, transparency_mask);
+    scenes[currentScene].draw_solution(page * 9 + currentScene, part_mask, transparency_mask);
 }
 
 function hoverPartEnd() {
-    if (current_scene < 0)
+    if (currentScene < 0)
         return;
 
     var i = getIndexFromId(this);
     transparency_mask[i] = false;
-    scenes[current_scene].draw_solution(page * 9 + current_scene, part_mask, transparency_mask);
+    scenes[currentScene].draw_solution(page * 9 + currentScene, part_mask, transparency_mask);
 }
 
 function resetMasks() {
@@ -151,16 +134,38 @@ function resetMasks() {
 }
 
 function getIndexFromId(obj) {
-    return $(obj).attr("id")[1];
+    return parseInt($(obj).attr("id")[1]);
+}
+
+function next() {
+    if (currentScene < 0) {
+        page += 1;
+        if (page * 9 < problems.length) {
+            for (var i = 0; i < 9; i++) {
+                scenes[i].draw_problem(page * 9 + i);
+            }
+        }
+    }
+}
+
+function previous() {
+    if (currentScene < 0) {
+        if (page > 0) {
+            page -= 1;
+            for (var i = 0; i < 9; i++) {
+                scenes[i].draw_problem(page * 9 + i);
+            }
+        }
+    }
 }
 
 function onKeyUp(event) {
     switch (event.keyCode) {
-        case 37: // left
-            previousPage();
+        case 37:
+            previous();
             break;
-        case 39: // right
-            nextPage();
+        case 39:
+            next();
             break;
         default:
             return;
