@@ -10,16 +10,16 @@ var transparency_mask = [ false, false, false, false, false, false, false ];
 $(function () {
 
     for (var i = 0; i < 9; i++) {
-        $("#partBrowser").before("<div class='thumbnail' id='t" + i + "' />");
+        $("#partBrowser").before("<div class='scene_small' id='t" + i + "' />");
         var scene = new Scene($("#t" + i))
         scene.draw_problem(i);
         scene.render();
         scenes.push(scene);
     }
 
-    $(".thumbnail").click(goToFullscreen);
-    $(".thumbnail").mouseover(hoverSceneBegin);
-    $(".thumbnail").mouseout(hoverSceneEnd);
+    $(".scene_small").click(showBigScene);
+    $(".scene_small").mouseover(hoverSceneBegin);
+    $(".scene_small").mouseout(hoverSceneEnd);
 
     for (var i = 0; i < 7; i++) {
         $("#partBrowser").append("<div class='buttonPart' id='p" + i + "' style='background: " + sad_colours[i] + "' />");
@@ -32,7 +32,7 @@ $(function () {
     document.addEventListener('keyup', onKeyUp, false);
 });
 
-function drawNextPage() {
+function nextPage() {
     page += 1;
     if (page * 9 < problems.length) {
         for (var i = 0; i < 9; i++) {
@@ -41,7 +41,7 @@ function drawNextPage() {
     }
 }
 
-function drawPrevPage() {
+function previousPage() {
     if (page > 0) {
         page -= 1;
         for (var i = 0; i < 9; i++) {
@@ -50,34 +50,34 @@ function drawPrevPage() {
     }
 }
 
-function goToFullscreen() {
+function showBigScene() {
     resetMasks();
 
     for (var i = 0; i < 9; i++) {
         var div = $("#t" + i);
-        div.removeClass("thumbnail");
+        div.removeClass("scene_small");
         if ($(this).attr('id') == div.attr('id')) {
-            div.addClass("thumbnail_big");
+            div.addClass("scene_big");
             scenes[i].draw_solution(page * 9 + i, part_mask, transparency_mask);
             scenes[i].startAnimation();
             scenes[i].resize(div.width(), div.height());
             current_scene = i;
         } else {
-            div.addClass("thumbnail_invisible");
+            div.addClass("invisibility");
         }
     }
 
-    $(".thumbnail_big").click(goToGallery);
+    $(".scene_big").click(showSmallScenes);
 }
 
-function goToGallery() {
+function showSmallScenes() {
     resetMasks();
 
     for (var i = 0; i < 9; i++) {
         var div = $("#t" + i);
-        div.removeClass("thumbnail_invisible");
-        div.removeClass("thumbnail_big");
-        div.addClass("thumbnail");
+        div.removeClass("invisibility");
+        div.removeClass("scene_big");
+        div.addClass("scene_small");
         if ($(this).attr('id') == div.attr('id')) {
             scenes[i].draw_problem(page * 9 + i);
             scenes[i].stopAnimation();
@@ -86,9 +86,9 @@ function goToGallery() {
     }
     current_scene = -1;
 
-    $(".thumbnail").click(goToFullscreen);
-    $(".thumbnail").mouseover(hoverSceneBegin);
-    $(".thumbnail").mouseout(hoverSceneEnd);
+    $(".scene_small").click(showBigScene);
+    $(".scene_small").mouseover(hoverSceneBegin);
+    $(".scene_small").mouseout(hoverSceneEnd);
 }
 
 function hoverSceneBegin() {
@@ -156,10 +156,10 @@ function getIndexFromId(obj) {
 function onKeyUp(event) {
     switch (event.keyCode) {
         case 37: // left
-            drawPrevPage();
+            previousPage();
             break;
         case 39: // right
-            drawNextPage();
+            nextPage();
             break;
         default:
             return;
