@@ -9,6 +9,7 @@ var part_mask = [ true, true, true, true, true, true, true ];
 var transparency_mask = [ false, false, false, false, false, false, false ];
 
 $(function () {
+    $("#count").text("page " + (page + 1) + " / " + Math.ceil(problems.length / 9));
 
     for (var i = 0; i < 9; i++) {
         $("#navigation").before("<div class='scene scene_small' id='t" + i + "' />");
@@ -62,6 +63,7 @@ function toggleScene(i, div) {
         currentScene = i;
 
         $(".partButton").removeClass("invisible");
+        $("#count").text("problem " + (page * 9 + currentScene + 1) + " / " + problems.length);
     } else {
         $(".scene").removeClass("disappear");
         $(".scene").removeClass("scene_big");
@@ -76,6 +78,8 @@ function toggleScene(i, div) {
         $(".partButton").addClass("invisible");
 
         currentScene = -1;
+
+        $("#count").text("page " + (page + 1) + " / " + Math.ceil(problems.length / 9));
     }
 }
 
@@ -149,6 +153,7 @@ function next() {
                 scenes[i].draw_problem(page * 9 + i);
             }
         }
+        $("#count").text("page " + (page + 1) + " / " + Math.ceil(problems.length / 9));
     } else {
         var i = currentScene;
         var new_i = i + 1;
@@ -171,6 +176,7 @@ function previous() {
                 scenes[i].draw_problem(page * 9 + i);
             }
         }
+        $("#count").text("page " + (page + 1) + " / " + Math.ceil(problems.length / 9));
     } else {
         var i = currentScene;
         var new_i = i - 1;
