@@ -1,4 +1,6 @@
 
+var colours = [ 0xff3b30, 0x1d62f0, 0xffcd02, 0x4cd964, 0xff9500, 0xef4db6, 0xd6cec3 ];
+
 var BLOCKSIZE = 90;
 
 function Scene(div) {
@@ -34,13 +36,14 @@ Scene.prototype.draw_problem = function(index) {
     this.render();
 }
 
-Scene.prototype.draw_solution = function(index) {
-    var colours = [ 0xff3b30, 0x1d62f0, 0xffcd02, 0x4cd964, 0xff9500, 0xef4db6, 0xd6cec3 ];
+Scene.prototype.draw_solution = function(index, mask) {
     var new_mesh = new THREE.Mesh();
     var offset = center(problems[index]);
 
     for (var i = 0; i < solutions[index].length; i++) {
-        new_mesh.add(draw_shape(solutions[index][i], offset, colours[i]));
+        if (mask[i]) {
+            new_mesh.add(draw_shape(solutions[index][i], offset, colours[i]));
+        }
     }
     this.scene.remove(this.mesh);
     this.mesh = new_mesh;
