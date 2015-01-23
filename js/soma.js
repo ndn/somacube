@@ -3,6 +3,7 @@ var scenes = [];
 var current_scene = -1;
 var page = 0;
 
+// TODO: Use same array as scene.js.
 var sad_colours = [ "#ff3b30", "#1d62f0", "#ffcd02", "#4cd964", "#ff9500", "#ef4db6", "#d6cec3" ];
 var part_mask = [ true, true, true, true, true, true, true ];
 var transparency_mask = [ false, false, false, false, false, false, false ];
