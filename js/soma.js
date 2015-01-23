@@ -41,12 +41,14 @@ $(function () {
 });
 
 function clickScene() {
-    resetMasks();
-
     var i = getIndexFromId(this);
     var div = $("#t" + i);
+    toggleScene(i, div);
+}
 
-    console.log("bla");
+function toggleScene(i, div) {
+    resetMasks();
+
     if (currentScene < 0) {
         $(".scene").removeClass("scene_small");
         $(".scene").addClass("disappear");
@@ -65,9 +67,11 @@ function clickScene() {
         $(".scene").removeClass("scene_big");
         $(".scene").addClass("scene_small");
 
-        scenes[i].draw_problem(page * 9 + i);
-        scenes[i].stopAnimation();
-        scenes[i].resize(div.width(), div.height());
+        for (var j = 0; j < 9; j++) {
+            scenes[j].draw_problem(page * 9 + j);
+            scenes[j].stopAnimation();
+            scenes[j].resize(div.width(), div.height());
+        }
 
         $(".partButton").addClass("invisible");
 
@@ -139,11 +143,22 @@ function getIndexFromId(obj) {
 
 function next() {
     if (currentScene < 0) {
-        page += 1;
-        if (page * 9 < problems.length) {
+        if ((page + 1) * 9 < problems.length) {
+            page += 1;
             for (var i = 0; i < 9; i++) {
                 scenes[i].draw_problem(page * 9 + i);
             }
+        }
+    } else {
+        var i = currentScene;
+        var new_i = i + 1;
+        if (page * 9 + new_i < problems.length) {
+            if (new_i > 8) {
+                new_i = 0;
+                page += 1;
+            }
+            toggleScene(i, $("#t" + i));
+            toggleScene(new_i, $("#t" + new_i));
         }
     }
 }
@@ -155,6 +170,17 @@ function previous() {
             for (var i = 0; i < 9; i++) {
                 scenes[i].draw_problem(page * 9 + i);
             }
+        }
+    } else {
+        var i = currentScene;
+        var new_i = i - 1;
+        if (page * 9 + new_i >= 0) {
+            if (new_i < 0) {
+                new_i = 8;
+                page -= 1;
+            }
+            toggleScene(i, $("#t" + i));
+            toggleScene(new_i, $("#t" + new_i));
         }
     }
 }
