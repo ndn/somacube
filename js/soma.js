@@ -111,9 +111,9 @@ function togglePart() {
     part_mask[i] = !part_mask[i];
 
     if (part_mask[i]) {
-        // TODO: Set opacity
+        $("#p" + i).css("opacity", 1.0);
     } else {
-        // TODO: Set opacity
+        $("#p" + i).css("opacity", 0.4);
     }
 
     scenes[currentScene].draw_solution(page * 9 + currentScene, part_mask, transparency_mask);
