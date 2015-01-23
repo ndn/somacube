@@ -36,13 +36,18 @@ Scene.prototype.draw_problem = function(index) {
     this.render();
 }
 
-Scene.prototype.draw_solution = function(index, mask) {
+Scene.prototype.draw_solution = function(index, visibility_mask, transparency_mask) {
     var new_mesh = new THREE.Mesh();
     var offset = center(problems[index]);
 
     for (var i = 0; i < solutions[index].length; i++) {
-        if (mask[i]) {
-            new_mesh.add(draw_shape(solutions[index][i], offset, colours[i]));
+        if (visibility_mask[i]) {
+            new_mesh.add(draw_shape(
+                solutions[index][i],
+                offset,
+                colours[i],
+                transparency_mask[i]
+            ));
         }
     }
     this.scene.remove(this.mesh);
@@ -85,11 +90,16 @@ Scene.prototype.stopAnimation = function() {
 }
 
 
-function draw_shape(shape, offset, colour) {
+function draw_shape(shape, offset, colour, transparent) {
     var mesh = new THREE.Mesh();
     for (var i = 0; i < shape.length; i++) {
         var geometry = new THREE.BoxGeometry(BLOCKSIZE-1, BLOCKSIZE-1, BLOCKSIZE-1);
-        var material = new THREE.MeshBasicMaterial({ color: colour });
+        var material;
+        if (transparent) {
+            material = new THREE.MeshBasicMaterial({ color: colour, opacity: 0.5, transparent: true });
+        } else {
+            material = new THREE.MeshBasicMaterial({ color: colour });
+        }
         var tmp = new THREE.Mesh(geometry, material);
         tmp.position.x = shape[i][0] * BLOCKSIZE - offset[0];
         tmp.position.y = shape[i][1] * BLOCKSIZE - offset[1];

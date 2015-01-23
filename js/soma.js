@@ -5,6 +5,7 @@ var page = 0;
 
 var sad_colours = [ "#ff3b30", "#1d62f0", "#ffcd02", "#4cd964", "#ff9500", "#ef4db6", "#d6cec3" ];
 var part_mask = [ true, true, true, true, true, true, true ];
+var transparency_mask = [ false, false, false, false, false, false, false ];
 
 $(function () {
 
@@ -17,12 +18,15 @@ $(function () {
     }
 
     $(".thumbnail").click(goToFullscreen);
-    $(".thumbnail").mouseover(hoverBegin);
-    $(".thumbnail").mouseout(hoverEnd);
+    $(".thumbnail").mouseover(hoverSceneBegin);
+    $(".thumbnail").mouseout(hoverSceneEnd);
 
     for (var i = 0; i < 7; i++) {
         $("#partBrowser").append("<div class='buttonPart' id='p" + i + "' style='background: " + sad_colours[i] + "' />");
-        $("#p" + i).click(togglePart);
+        var div = $("#p" + i);
+        div.click(togglePart);
+        div.mouseover(hoverPartBegin);
+        div.mouseout(hoverPartEnd);
     }
 
     document.addEventListener('keyup', onKeyUp, false);
@@ -47,12 +51,14 @@ function drawPrevPage() {
 }
 
 function goToFullscreen() {
+    resetMasks();
+
     for (var i = 0; i < 9; i++) {
         var div = $("#t" + i);
         div.removeClass("thumbnail");
         if ($(this).attr('id') == div.attr('id')) {
             div.addClass("thumbnail_big");
-            scenes[i].draw_solution(page * 9 + i, part_mask);
+            scenes[i].draw_solution(page * 9 + i, part_mask, transparency_mask);
             scenes[i].startAnimation();
             scenes[i].resize(div.width(), div.height());
             current_scene = i;
@@ -65,6 +71,8 @@ function goToFullscreen() {
 }
 
 function goToGallery() {
+    resetMasks();
+
     for (var i = 0; i < 9; i++) {
         var div = $("#t" + i);
         div.removeClass("thumbnail_invisible");
@@ -79,50 +87,70 @@ function goToGallery() {
     current_scene = -1;
 
     $(".thumbnail").click(goToFullscreen);
-    $(".thumbnail").mouseover(hoverBegin);
-    $(".thumbnail").mouseout(hoverEnd);
+    $(".thumbnail").mouseover(hoverSceneBegin);
+    $(".thumbnail").mouseout(hoverSceneEnd);
 }
 
-function hoverBegin() {
-    for (var i = 0; i < 9; i++) {
-        var div = $("#t" + i);
-        if ($(this).attr('id') == div.attr('id')) {
-            scenes[i].startAnimation();
-        }
-    }
+function hoverSceneBegin() {
+    if (current_scene >= 0)
+        return;
+
+    var i = getIndexFromId(this);
+    scenes[i].startAnimation();
 }
 
-function hoverEnd() {
-    for (var i = 0; i < 9; i++) {
-        var div = $("#t" + i);
-        if ($(this).attr('id') == div.attr('id')) {
-            if (!div.hasClass("thumbnail_big")) {
-                scenes[i].stopAnimation();
-            }
-        }
-    }
+function hoverSceneEnd() {
+    if (current_scene >= 0)
+        return;
+
+    var i = getIndexFromId(this);
+    scenes[i].stopAnimation();
 }
 
 function togglePart() {
     if (current_scene < 0)
         return;
 
-    for (var i = 0; i < 7; i++) {
-        var div = $("#p" + i);
+    var i = getIndexFromId(this);
 
-        if ($(this).attr('id') == div.attr('id')) {
-            part_mask[i] = !part_mask[i];
+    part_mask[i] = !part_mask[i];
 
-            if (part_mask[i]) {
-                // TODO: Set opacity
-            } else {
-                // TODO: Set opacity
-            }
-
-            scenes[current_scene].draw_solution(page * 9 + current_scene, part_mask);
-        }
+    if (part_mask[i]) {
+        // TODO: Set opacity
+    } else {
+        // TODO: Set opacity
     }
 
+    scenes[current_scene].draw_solution(page * 9 + current_scene, part_mask, transparency_mask);
+}
+
+function hoverPartBegin() {
+    if (current_scene < 0)
+        return;
+
+    var i = getIndexFromId(this);
+    transparency_mask[i] = true;
+    scenes[current_scene].draw_solution(page * 9 + current_scene, part_mask, transparency_mask);
+}
+
+function hoverPartEnd() {
+    if (current_scene < 0)
+        return;
+
+    var i = getIndexFromId(this);
+    transparency_mask[i] = false;
+    scenes[current_scene].draw_solution(page * 9 + current_scene, part_mask, transparency_mask);
+}
+
+function resetMasks() {
+    for (var i = 0; i < 8; i++) {
+        part_mask[i] = true;
+        transparency_mask[i] = false;
+    }
+}
+
+function getIndexFromId(obj) {
+    return $(obj).attr("id")[1];
 }
 
 function onKeyUp(event) {
