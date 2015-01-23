@@ -43,6 +43,7 @@ function goToFullscreen() {
         div.removeClass("thumbnail");
         if ($(this).attr('id') == div.attr('id')) {
             div.addClass("thumbnail_big");
+            scenes[i].draw_solution(page * 9 + i);
             scenes[i].startAnimation();
             scenes[i].resize(div.width(), div.height());
         } else {
@@ -60,6 +61,7 @@ function goToGallery() {
         div.removeClass("thumbnail_big");
         div.addClass("thumbnail");
         if ($(this).attr('id') == div.attr('id')) {
+            scenes[i].draw_problem(page * 9 + i);
             scenes[i].stopAnimation();
             scenes[i].resize(div.width(), div.height());
         }
@@ -83,7 +85,9 @@ function hoverEnd() {
     for (var i = 0; i < 9; i++) {
         var div = $("#t" + i);
         if ($(this).attr('id') == div.attr('id')) {
-            scenes[i].stopAnimation();
+            if (!div.hasClass("thumbnail_big")) {
+                scenes[i].stopAnimation();
+            }
         }
     }
 }
