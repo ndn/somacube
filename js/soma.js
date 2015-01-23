@@ -19,6 +19,7 @@ $(function () {
         scenes.push(scene);
     }
 
+    // TODO: Pretty arrows for navigation...
     $("#navigation").append("<div class='navButton' id='previousButton' />");
     for (var i = 0; i < 7; i++) {
         $("#navigation").append("<div class='partButton invisible' id='p" + i + "' style='background: " + sad_colours[i] + "' />");
@@ -37,6 +38,8 @@ $(function () {
 
     $("#previousButton").click(previous);
     $("#nextButton").click(next);
+
+    $("#about_link").click(clickAbout);
 
     document.addEventListener('keyup', onKeyUp, false);
 });
@@ -201,6 +204,17 @@ function onKeyUp(event) {
             break;
         default:
             return;
+    }
+}
+
+function clickAbout() {
+    var div = $("#about_box");
+    if (div.hasClass("disappear")) {
+        $("#about_link").text("hide about");
+        div.removeClass("disappear");
+    } else {
+        $("#about_link").text("about");
+        div.addClass("disappear");
     }
 }
 

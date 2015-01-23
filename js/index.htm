@@ -8,9 +8,12 @@
                 background-color: #ffffff;
             }
 
+            h1 {
+                text-align: center;
+            }
+
             h1, p {
                 font-family: sans-serif;
-                text-align: center;
             }
 
             #content {
@@ -72,6 +75,11 @@
             .invisible {
                 visibility: hidden;
             }
+
+            #about_box {
+                width: 620px;
+                margin: auto;
+            }
         </style>
         <script src="jquery-2.1.3.min.js"></script>
         <script src="three.min.js"></script>
@@ -83,7 +91,11 @@
     <body>
         <div>
             <h1>soma cube</h1>
-            <p><span id="about">about</span> - <span id="count">page 0 / 0</span></p>
+            <p style="text-align: center"><span id="about_link">about</span> - <span id="count">page 0 / 0</span></p>
+        </div>
+        <div id="about_box" class="disappear">
+            <p>In the summer of 2010, ØMQ was still a little-known niche library described by its rather terse reference manual and a living but sparse wiki. Martin Sustrik and myself were sitting in the bar of the Hotel Kyjev in Bratislava plotting how to make ØMQ more widely popular. Martin had written most of the ØMQ code, and I’d put up the funding and organized the community. Over some Zlaty Bazants, we agreed that ØMQ needed a new, simpler web site and a basic guide for new users.
+            Martin collected some ideas for topics to explain. I’d never written a line of ØMQ code before this, so it became a live learning documentary. As I worked through simple examples to more complex ones, I tried to answer many of the questions I’d seen on the mailing list. Because I’d been building large-scale architectures for 30 years, there were a lot of problems at which I was keen to throw ØMQ. Amazingly the results were mostly simple and elegant, even when working in C. I felt a pure joy learning ØMQ and using it to solve real problems, which brought me back to programming after a few years’ pause. And often, not knowing how it was "supposed" to be done, we improved ØMQ as we went along.</p>
         </div>
         <div id="content">
             <div id="navigation"/>
