@@ -17,12 +17,11 @@ $(function () {
         scenes.push(scene);
     }
 
-    // TODO: Pretty arrows for navigation...
-    $("#navigation").append("<div class='navButton' id='previousButton' />");
+    $("#navigation").append("<div id='previousButton' />");
     for (var i = 0; i < 7; i++) {
         $("#navigation").append("<div class='partButton invisible' id='p" + i + "' style='background: #" + colours[i].toString(16) + "' />");
     }
-    $("#navigation").append("<div class='navButton' id='nextButton' />");
+    $("#navigation").append("<div id='nextButton' />");
 
     $(".scene")
         .click(clickScene)

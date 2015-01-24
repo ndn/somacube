@@ -43,7 +43,7 @@
                 float: left;
             }
 
-            .scene_small:hover, #previousButton:hover, #nextButton:hover {
+            .scene_small:hover {
                 outline: 1px solid #eeeeee;
                 background: #ffffff;
             }
@@ -53,7 +53,7 @@
                 float: left;
             }
 
-            .navButton, .partButton {
+            .partButton {
                 width: 30px;
                 height: 30px;
                 margin-right: 10px;
@@ -61,14 +61,24 @@
             }
 
             #previousButton {
-                background: #eeeeee;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 15px 30px 15px 0;
+                border-color: transparent #eeeeee transparent transparent;
                 margin-right: 145px;
+                float: left;
             }
 
             #nextButton {
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 15px 0 15px 30px;
+                border-color: transparent transparent transparent #eeeeee;
                 margin-right: 0px;
                 margin-left: 135px;
-                background: #eeeeee;
+                float: left;
             }
 
             .disappear {
