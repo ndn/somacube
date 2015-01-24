@@ -3,8 +3,6 @@ var scenes = [];
 var currentScene = -1;
 var page = 0;
 
-// TODO: Use same array as scene.js.
-var sad_colours = [ "#ff3b30", "#1d62f0", "#ffcd02", "#4cd964", "#ff9500", "#ef4db6", "#d6cec3" ];
 var part_mask = [ true, true, true, true, true, true, true ];
 var transparency_mask = [ false, false, false, false, false, false, false ];
 
@@ -22,7 +20,7 @@ $(function () {
     // TODO: Pretty arrows for navigation...
     $("#navigation").append("<div class='navButton' id='previousButton' />");
     for (var i = 0; i < 7; i++) {
-        $("#navigation").append("<div class='partButton invisible' id='p" + i + "' style='background: " + sad_colours[i] + "' />");
+        $("#navigation").append("<div class='partButton invisible' id='p" + i + "' style='background: #" + colours[i].toString(16) + "' />");
     }
     $("#navigation").append("<div class='navButton' id='nextButton' />");
 
