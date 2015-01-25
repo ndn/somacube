@@ -139,6 +139,7 @@ function resetMasks() {
         part_mask[i] = true;
         transparency_mask[i] = false;
     }
+    $(".partButton").css("opacity", 1.0);
 }
 
 function getIndexFromId(obj) {
