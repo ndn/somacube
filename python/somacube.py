@@ -14,9 +14,8 @@ parser = argparse.ArgumentParser(description="Kloetze algorithm.")
 parser.add_argument("-p", "--problem")
 parser.add_argument("-a", "--all", action="store_true", help="Solve all problems starting with the given one.")
 parser.add_argument("-c", "--complete", action="store_true", help="Find all solutions.")
-parser.add_argument("-v", "--verbose", action="store_true", help="Show progress (slower).")
 parser.add_argument("-j", "--javascript", action="store_true", help="Generate java script arrays for solutions")
-parser.add_argument("-m", "--multi-core", action="store_true", help="Use parallel execution on all cores.")
+parser.add_argument("-m", "--multicore", action="store_true", help="Use parallel execution on all cores.")
 
 args = parser.parse_args()
 
@@ -35,18 +34,33 @@ if args.all:
 else:
     problem_range = range(problem, problem + 1)
 
-for p in problem_range:
-    print("Solving problem {}".format(p))
+solutions = []
 
-    solver = Solver(problems[p], complete=args.complete)
-    solver.solve()
+if args.multicore:
+    import parallel_solver
+
+try:
+    for p in problem_range:
+        print("Solving problem {}".format(p))
+
+        if not args.multicore:
+            solver = Solver(problems[p], complete=args.complete)
+            solutions.append(solver.solve())
+        else:
+            solutions.append(parallel_solver.solve(problems[p], args.complete))
+
+except:
+    raise
+
+finally:
+    if args.multicore:
+        parallel_solver.quit()
 
 print("")
 
 if args.javascript:
     import json
     with open("../js/solutions.js", "w") as f:
-        solutions = [ s.solutions[0] for s in solvers ]
         f.write("solutions =")
         f.write(json.dumps(solutions))
         f.write(";")

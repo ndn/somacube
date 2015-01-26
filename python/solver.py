@@ -138,6 +138,7 @@ class Solver:
 
     def solve(self):
         self._solve(0, [], [])
+        return self.solutions
 
 
     def _solve(self, shape_index, solution, parts):

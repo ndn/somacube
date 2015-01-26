@@ -1,18 +1,9 @@
 import zmq
 import subprocess
-import sys
 import json
-
-import problems
 
 CLIENTS = 8
 
-problems = problems.load()
-
-x = {}
-x["problem"] = problems[0]
-x["complete"] = False
-x["slices"] = CLIENTS
 
 context = zmq.Context()
 
@@ -30,24 +21,34 @@ syncs = 0
 while syncs != CLIENTS:
     s = receiver.recv()
     if s == "sync":
-        print("sync {}".format(syncs + 1))
         syncs += 1
 
-clients = 0
-for i in range(CLIENTS):
-    x["slice"] = clients
-    sender.send_string(json.dumps(x))
-    clients += 1
+print("Successfully started workers on {} cores.".format(CLIENTS))
 
-results = []
-while len(results) != CLIENTS:
-    s = receiver.recv()
-    results.append(s)
+def solve(problem, complete):
+    x = {}
+    x["problem"] = problem
+    x["complete"] = complete
+    x["slices"] = CLIENTS
 
-for res in results:
-    x = json.loads(res)
-    print(len(x))
+    clients = 0
+    for i in range(CLIENTS):
+        x["slice"] = clients
+        sender.send_string(json.dumps(x))
+        clients += 1
 
-for h in handles:
-    h.terminate()
+    results = []
+    while len(results) != CLIENTS:
+        s = receiver.recv()
+        results.append(s)
+
+    solutions = []
+    for res in results:
+        solutions += json.loads(res)
+
+    return solutions
+
+def quit():
+    for h in handles:
+        h.terminate()
 

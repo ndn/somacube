@@ -19,6 +19,8 @@ while True:
 
     task = json.loads(s)
 
+    # Need to convert points back to tuples because they are lost in
+    # serialization.
     problem = []
     for point in task["problem"]:
         problem.append((point[0], point[1], point[2]))
