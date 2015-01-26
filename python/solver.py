@@ -1,6 +1,4 @@
 
-import functools, operator
-
 from shapes import shapes
 import rotation
 
@@ -126,7 +124,6 @@ class Solver:
     def __init__(self, problem, complete=False, slices=1, slice=0):
         self.problem = problem
         self.complete = complete
-        self.done = False
 
         self.problem.sort()
         assert len(problem) == sum([ len(shape) for shape in shapes ]), "Invalid problem length."
@@ -138,20 +135,9 @@ class Solver:
 
         self.placed_shapes[0] = [ x for i, x in enumerate(self.placed_shapes[0]) if i % slices == slice ]
 
-        self.progress_current = 0
-        self.progress_total = functools.reduce(operator.mul, [ len(p) for p in self.placed_shapes ], 1)
-
-        # First will stay 0 because it can never fail
-        self.progress_offset = [ 0, 0, 0, 0, 0, 0, 0 ]
-        for i in range(1, len(self.placed_shapes) - 1):
-            self.progress_offset[i] = functools.reduce(operator.mul, [ len(p) for p in self.placed_shapes[i+1:] ], 1)
-        self.progress_offset[-1] = 1
-
 
     def solve(self):
-        self.done = False
         self._solve(0, [], [])
-        self.done = True
 
 
     def _solve(self, shape_index, solution, parts):
@@ -164,11 +150,7 @@ class Solver:
 
         for shape in self.placed_shapes[shape_index]:
             if not _add(shape, solution):
-                self.progress_current += self.progress_offset[shape_index]
                 continue
-
-            if shape_index == 6:
-                self.progress_current += 1
 
             parts.append(shape)
 

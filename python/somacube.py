@@ -5,7 +5,6 @@ import argparse
 from threading import Thread
 
 import problems
-import verbose
 from solver import Solver
 
 if __name__ != "__main__":
@@ -15,19 +14,13 @@ parser = argparse.ArgumentParser(description="Kloetze algorithm.")
 parser.add_argument("-p", "--problem")
 parser.add_argument("-a", "--all", action="store_true", help="Solve all problems starting with the given one.")
 parser.add_argument("-c", "--complete", action="store_true", help="Find all solutions.")
-parser.add_argument("-l", "--list", action="store_true", help="List problems.")
 parser.add_argument("-v", "--verbose", action="store_true", help="Show progress (slower).")
 parser.add_argument("-j", "--javascript", action="store_true", help="Generate java script arrays for solutions")
+parser.add_argument("-m", "--multi-core", action="store_true", help="Use parallel execution on all cores.")
 
 args = parser.parse_args()
 
 problems = problems.load()
-
-if args.list:
-    for i, p in enumerate(problems):
-        s = Solver(p)
-        print("{}:    {}".format(i, s.progress_total))
-    sys.exit()
 
 if args.problem == None:
     print("Specify problem to work on. (0-{})".format(len(problems) - 1))
@@ -42,33 +35,13 @@ if args.all:
 else:
     problem_range = range(problem, problem + 1)
 
-solvers = []
 for p in problem_range:
-    solvers.append(Solver(problems[p], complete = args.complete))
+    print("Solving problem {}".format(p))
 
-for p, solver in enumerate(solvers):
-    if args.verbose and len(problem_range) > 1:
-        print("Problem {}".format(p))
+    solver = Solver(problems[p], complete=args.complete)
+    solver.solve()
 
-    try:
-        if args.verbose and args.complete:
-            t = Thread(target = verbose.output, args = (solver, ))
-            t.start()
-
-        solver.solve()
-
-        if args.verbose and args.complete:
-            t.join()
-
-    except KeyboardInterrupt:
-        if args.verbose and args.complete:
-            solver.done = True
-            t.join()
-        print("")
-        sys.exit()
-
-    if args.verbose and args.complete:
-        print("")
+print("")
 
 if args.javascript:
     import json
