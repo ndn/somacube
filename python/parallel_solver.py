@@ -37,11 +37,13 @@ def solve(problem, complete):
         sender.send_string(json.dumps(x))
         clients += 1
 
+    # TODO: Find way to early abort when complete is not set.
     results = []
     while len(results) != CLIENTS:
         s = receiver.recv()
         results.append(s)
 
+    # TODO: Convert points back to tuples.
     solutions = []
     for res in results:
         solutions += json.loads(res)

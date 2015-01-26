@@ -37,6 +37,7 @@ else:
 solutions = []
 
 if args.multicore:
+    # TODO: See what happens on systems where zmq is not installed.
     import parallel_solver
 
 try:
