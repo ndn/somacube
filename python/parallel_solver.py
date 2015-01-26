@@ -11,7 +11,7 @@ problems = problems.load()
 
 x = {}
 x["problem"] = problems[0]
-x["complete"] = True
+x["complete"] = False
 x["slices"] = CLIENTS
 
 context = zmq.Context()
@@ -24,7 +24,7 @@ receiver.bind("tcp://*:5558")
 
 handles = []
 for i in range(CLIENTS):
-    handles.append(subprocess.Popen(["python", "somacube_parallel_worker.py"]))
+    handles.append(subprocess.Popen(["python", "parallel_worker.py"]))
 
 syncs = 0
 while syncs != CLIENTS:
